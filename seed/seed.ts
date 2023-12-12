@@ -1,5 +1,4 @@
 interface SeedProduct {
-  id: string;
   description: string;
   images: string[];
   inStock: number;
@@ -8,7 +7,7 @@ interface SeedProduct {
   slug: string;
   tags: string[];
   title: string;
-  //type: ValidTypes; // Todo
+  type: ValidTypes;
   gender: 'men' | 'women' | 'kid' | 'unisex';
 }
 
@@ -16,10 +15,12 @@ type ValidSizes = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL';
 type ValidTypes = 'shirts' | 'pants' | 'hoodies' | 'hats';
 
 interface SeedData {
+  categories: string[];
   products: SeedProduct[];
 }
 
 export const initialData: SeedData = {
+  categories: ['Shirts', 'Pants', 'Hoodies', 'Hats'],
   products: [
     {
       description:
