@@ -1,5 +1,5 @@
 import { ProductSlideShow, QuantitySelector, SizeSelector } from '@/components';
-import { ProductMobileSlideShow } from '@/components/products/slideshow/ProductMobileSlideshow';
+import { ProductMobileSlideShow } from '@/components/products/slideshow/ProductMobileSlideShow';
 import { titleFont } from '@/config/fonts';
 import { initialData } from '@/database/products';
 import { notFound } from 'next/navigation';
