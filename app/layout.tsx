@@ -1,11 +1,7 @@
 /* eslint-disable @next/next/no-page-custom-font */
-import { ShopLayout } from '@/components/layouts';
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { Providers } from './providers';
-
-const inter = Inter({ subsets: ['latin'] });
+import { inter } from './config/fonts';
 
 export const metadata: Metadata = {
   title: {
@@ -37,11 +33,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
         />
       </head>
-      <body className={inter.className}>
-        <Providers>
-          <ShopLayout>{children}</ShopLayout>
-        </Providers>
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }

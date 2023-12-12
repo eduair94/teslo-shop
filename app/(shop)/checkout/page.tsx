@@ -1,4 +1,4 @@
-export default function NotFoundPage() {
+export default function CheckoutPage() {
   return (
     <div>
       <h1>Hello Page</h1>
