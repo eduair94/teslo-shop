@@ -1,4 +1,4 @@
-import { titleFont } from '@/app/config/fonts';
+import { titleFont } from '@/config/fonts';
 import Image from 'next/image';
 import Link from 'next/link';
 
