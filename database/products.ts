@@ -1,5 +1,4 @@
 interface SeedProduct {
-  id: string;
   description: string;
   images: string[];
   inStock: number;
@@ -8,7 +7,7 @@ interface SeedProduct {
   slug: string;
   tags: string[];
   title: string;
-  //type: ValidTypes; // Todo
+  type: ValidTypes;
   gender: 'men' | 'women' | 'kid' | 'unisex';
 }
 
