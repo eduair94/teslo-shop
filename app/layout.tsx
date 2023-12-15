@@ -5,8 +5,8 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    template: 'Teslo-Shop - %s',
-    default: 'Teslo-Shop',
+    template: '%s - Teslo | Shop',
+    default: 'Home - Teslo | Shop',
   },
   description: 'Find the best products in Teslo-Shop',
   openGraph: {

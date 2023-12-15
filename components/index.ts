@@ -4,6 +4,8 @@ export * from './products/quantity-selector/QuantitySelector';
 export * from './products/size-selector/SizeSelector';
 export * from './products/slideshow/ProductSlideShow';
 
+export * from './product/stock-label/StockLabel';
+
 export * from './ui/footer/Footer';
 export * from './ui/not-found/PageNotFound';
 export * from './ui/pagination/Pagination';
