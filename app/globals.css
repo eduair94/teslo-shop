@@ -63,6 +63,10 @@ body {
   @apply bg-gray-200 hover:bg-gray-300 text-black py-2 px-4 rounded transition-all;
 }
 
+.btn-disabled {
+  @apply bg-gray-600 text-white py-2 px-4 rounded transition-all pointer-events-none;
+}
+
 @layer components {
   .nav-link {
     @apply flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all;

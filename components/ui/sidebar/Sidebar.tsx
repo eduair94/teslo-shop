@@ -1,7 +1,8 @@
 'use client';
+import { logout } from '@/actions';
 import { useUIStore } from '@/store';
 import clsx from 'clsx';
-import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import {
   IoCloseOutline,
   IoLogInOutline,
@@ -12,12 +13,18 @@ import {
   IoShirtOutline,
   IoTicketOutline,
 } from 'react-icons/io5';
+import { SideBarLink } from './SideBarLink';
 
 export const Sidebar = () => {
   const isSideMenuOpen = useUIStore((state) => state.isSideMenuOpen);
   const closeMenu = useUIStore((state) => state.closeSideMenu);
+
+  const { data: session } = useSession();
+  const isAuthenticated = !!session?.user;
+  const isAdmin = session?.user.role === 'admin';
+
   return (
-    <div>
+    <>
       {/* Background black */}
       {isSideMenuOpen && (
         <>
@@ -28,7 +35,7 @@ export const Sidebar = () => {
 
       <nav
         className={clsx(
-          'fixed p-5 right-0 top-0 w-[500px] h-screen bg-white z-20 shadow-2xl transform transition-all duration-300)',
+          'fixed p-5 right-0 top-0 w-screen md:w-[500px] h-screen bg-white z-20 shadow-2xl transform transition-all duration-300',
           { 'translate-x-full': !isSideMenuOpen },
         )}
       >
@@ -47,36 +54,33 @@ export const Sidebar = () => {
           />
         </div>
 
-        <Link href="/" className="nav-link">
-          <IoPersonOutline size={30} />
-          <span className="ml-3 text-xl">Profile</span>
-        </Link>
-        <Link href="/orders" className="nav-link">
-          <IoTicketOutline size={30} />
-          <span className="ml-3 text-xl">Orders</span>
-        </Link>
-        <Link href="/orders" className="nav-link">
-          <IoLogInOutline size={30} />
-          <span className="ml-3 text-xl">Login</span>
-        </Link>
-        <Link href="/orders" className="nav-link">
-          <IoLogOutOutline size={30} />
-          <span className="ml-3 text-xl">Logout</span>
-        </Link>
-        <div className="w-full h-px bg-gray-200 my-10"></div>
-        <Link href="/orders" className="nav-link">
-          <IoShirtOutline size={30} />
-          <span className="ml-3 text-xl">Products</span>
-        </Link>
-        <Link href="/orders" className="nav-link">
-          <IoTicketOutline size={30} />
-          <span className="ml-3 text-xl">Orders</span>
-        </Link>
-        <Link href="/orders" className="nav-link">
-          <IoPeopleOutline size={30} />
-          <span className="ml-3 text-xl">Users</span>
-        </Link>
+        {isAuthenticated ? (
+          <>
+            <SideBarLink
+              Icon={IoPersonOutline}
+              title="Profile"
+              href="/profile"
+            />
+            <SideBarLink Icon={IoTicketOutline} title="Orders" href="/orders" />
+            <SideBarLink
+              onClick={logout}
+              Icon={IoLogOutOutline}
+              title="Logout"
+            />
+          </>
+        ) : (
+          <SideBarLink Icon={IoLogInOutline} title="Login" href="/auth/login" />
+        )}
+
+        {isAdmin && (
+          <>
+            <div className="w-full h-px bg-gray-200 my-10"></div>
+            <SideBarLink Icon={IoShirtOutline} title="Products" href="/" />
+            <SideBarLink Icon={IoTicketOutline} title="Orders" href="/orders" />
+            <SideBarLink Icon={IoPeopleOutline} title="Users" href="/users" />
+          </>
+        )}
       </nav>
-    </div>
+    </>
   );
 };
