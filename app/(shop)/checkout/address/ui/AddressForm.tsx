@@ -1,51 +1,158 @@
 'use client';
 
-import Link from 'next/link';
+import { deleteUserAddress, setUserAddress } from '@/actions';
+import { IAddress, ICountry } from '@/interfaces';
+import { useAddressStore } from '@/store';
+import clsx from 'clsx';
+import { useSession } from 'next-auth/react';
+import { FC, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-export const AddressForm = () => {
+interface FormInputs {
+  firstName: string;
+  lastName: string;
+  address: string;
+  address2?: string;
+  postalCode: string;
+  city: string;
+  country: string;
+  phone: string;
+  rememberAddress: boolean;
+}
+
+interface Props {
+  countries: ICountry[];
+  userStoredAddress?: Partial<IAddress>;
+}
+
+export const AddressForm: FC<Props> = ({
+  countries,
+  userStoredAddress = {},
+}) => {
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { isValid },
+  } = useForm<FormInputs>({
+    defaultValues: {
+      ...userStoredAddress,
+      rememberAddress: false,
+    },
+  });
+  const [loading, setLoading] = useState(true);
+  const setAddress = useAddressStore((state) => state.setAddress);
+  const address = useAddressStore((state) => state.address);
+  const { data: session } = useSession({
+    required: true,
+  });
+
+  useEffect(() => {
+    if (address.firstName) {
+      reset(address);
+    }
+    setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onSubmit = async (data: FormInputs) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { rememberAddress, ...address } = data;
+    setAddress(data);
+    if (data.rememberAddress) {
+      await setUserAddress(address, session!.user.id);
+    } else {
+      await deleteUserAddress(session!.user.id);
+    }
+  };
+
+  if (loading)
+    return (
+      <div className="animate-pulse bg-gray-200 h-[500px] max-h-screen w-100"></div>
+    );
+
   return (
-    <div className="grid grid-cols-1 gap-2 sm:gap-5 sm:grid-cols-2">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="grid grid-cols-1 gap-2 sm:gap-5 sm:grid-cols-2"
+    >
       <div className="flex flex-col mb-2">
         <span>Names</span>
-        <input type="text" className="p-2 border rounded-md bg-gray-200" />
+        <input
+          type="text"
+          className="p-2 border rounded-md bg-gray-200"
+          {...register('firstName', { required: true })}
+        />
       </div>
 
       <div className="flex flex-col mb-2">
         <span>Surnames</span>
-        <input type="text" className="p-2 border rounded-md bg-gray-200" />
+        <input
+          type="text"
+          className="p-2 border rounded-md bg-gray-200"
+          {...register('lastName', { required: true })}
+        />
       </div>
 
       <div className="flex flex-col mb-2">
         <span>Address</span>
-        <input type="text" className="p-2 border rounded-md bg-gray-200" />
+        <input
+          type="text"
+          className="p-2 border rounded-md bg-gray-200"
+          {...register('address', { required: true })}
+        />
       </div>
 
       <div className="flex flex-col mb-2">
         <span>Address 2 (optional)</span>
-        <input type="text" className="p-2 border rounded-md bg-gray-200" />
+        <input
+          type="text"
+          className="p-2 border rounded-md bg-gray-200"
+          {...register('address2')}
+        />
       </div>
 
       <div className="flex flex-col mb-2">
         <span>ZIP Code</span>
-        <input type="text" className="p-2 border rounded-md bg-gray-200" />
+        <input
+          type="text"
+          className="p-2 border rounded-md bg-gray-200"
+          {...register('postalCode', { required: true })}
+        />
       </div>
 
       <div className="flex flex-col mb-2">
         <span>City</span>
-        <input type="text" className="p-2 border rounded-md bg-gray-200" />
+        <input
+          type="text"
+          className="p-2 border rounded-md bg-gray-200"
+          {...register('city', { required: true })}
+        />
       </div>
 
       <div className="flex flex-col mb-2">
         <span>Country</span>
-        <select className="p-2 border rounded-md bg-gray-200">
+        <select
+          className="p-2 border rounded-md bg-gray-200"
+          {...register('country', { required: true })}
+        >
           <option value="">[ Seleccione ]</option>
-          <option value="CRI">Costa Rica</option>
+
+          {countries.map((country) => (
+            <option key={country.id} value={country.id}>
+              {country.name}
+            </option>
+          ))}
         </select>
       </div>
 
       <div className="flex flex-col mb-2">
         <span>Phone</span>
-        <input type="text" className="p-2 border rounded-md bg-gray-200" />
+        <input
+          type="text"
+          className="p-2 border rounded-md bg-gray-200"
+          {...register('phone', { required: true })}
+        />
       </div>
 
       <div className="flex flex-col mb-2">
@@ -59,6 +166,7 @@ export const AddressForm = () => {
               type="checkbox"
               className="border-gray-500 before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-blue-500 checked:bg-blue-500 checked:before:bg-blue-500 hover:before:opacity-10"
               id="checkbox"
+              {...register('rememberAddress')}
             />
             <div className="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
               <svg
@@ -82,13 +190,17 @@ export const AddressForm = () => {
       </div>
 
       <div className="flex flex-col mb-2 sm:mt-10">
-        <Link
-          href="/checkout"
-          className="btn-primary flex w-full sm:w-1/2 justify-center "
+        <button
+          disabled={!isValid}
+          type="submit"
+          className={clsx('btn-primary flex w-full sm:w-1/2 justify-center', {
+            'btn-primary': isValid,
+            'btn-disabled': !isValid,
+          })}
         >
           Next
-        </Link>
+        </button>
       </div>
-    </div>
+    </form>
   );
 };
