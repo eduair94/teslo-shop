@@ -16,6 +16,7 @@ export const SideBarLink: FC<Props> = ({ Icon, title, href, onClick }) => {
   ) => {
     e.preventDefault();
     if (onClick) onClick();
+    closeMenu();
   };
 
   return (

@@ -10,6 +10,17 @@ export const authConfig: NextAuthConfig = {
     newUser: '/auth/new-account',
   },
   callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      // const isLoggedIn = !!auth?.user;
+      // const isProfilePage = nextUrl.pathname.startsWith('/profile');
+      // if (isProfilePage) {
+      //   if (isLoggedIn) return true;
+      //   return .redirect(
+      //     new URL('/auth/login?returnTo=/profile', nextUrl),
+      //   ); // Redirect unauthenticated users to login page
+      // }
+      return true;
+    },
     jwt({ token, user }) {
       if (user) token.data = user;
       return token;

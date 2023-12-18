@@ -3,6 +3,7 @@
 import { authenticate } from '@/actions';
 import clsx from 'clsx';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { IoAlertCircleOutline } from 'react-icons/io5';
@@ -25,13 +26,13 @@ function LoginButton() {
 
 export const LoginForm = () => {
   const [state, dispatch] = useFormState(authenticate, undefined);
+  const router = useRouter();
 
   useEffect(() => {
     if (state === 'Success') {
-      // redirect
-      window.location.replace('/');
+      router.push('/');
     }
-  }, [state]);
+  }, [state, router]);
   return (
     <form action={dispatch} className="flex flex-col">
       <label htmlFor="email">Email</label>
@@ -39,7 +40,6 @@ export const LoginForm = () => {
         className="px-5 py-2 border bg-gray-200 rounded mb-5"
         type="email"
         name="email"
-        value="fernando@gmail.com"
       />
 
       <label htmlFor="password">Password</label>
@@ -47,7 +47,6 @@ export const LoginForm = () => {
         className="px-5 py-2 border bg-gray-200 rounded mb-5"
         type="password"
         name="password"
-        value="123456"
       />
 
       <LoginButton />

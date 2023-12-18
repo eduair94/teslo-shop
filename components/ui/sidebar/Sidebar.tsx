@@ -2,7 +2,9 @@
 import { logout } from '@/actions';
 import { useUIStore } from '@/store';
 import clsx from 'clsx';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import {
   IoCloseOutline,
   IoLogInOutline,
@@ -18,10 +20,32 @@ import { SideBarLink } from './SideBarLink';
 export const Sidebar = () => {
   const isSideMenuOpen = useUIStore((state) => state.isSideMenuOpen);
   const closeMenu = useUIStore((state) => state.closeSideMenu);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  const { data: session } = useSession();
-  const isAuthenticated = !!session?.user;
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === 'authenticated';
   const isAdmin = session?.user.role === 'admin';
+
+  const sessionUpdate = async () => {
+    setLoading(true);
+    await getSession();
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    sessionUpdate();
+  }, []);
+
+  const onClickLogout = () => {
+    logout().then(() => {
+      sessionUpdate().then(() => {
+        router.refresh();
+      });
+    });
+  };
+
+  if (loading) return <></>;
 
   return (
     <>
@@ -63,7 +87,7 @@ export const Sidebar = () => {
             />
             <SideBarLink Icon={IoTicketOutline} title="Orders" href="/orders" />
             <SideBarLink
-              onClick={logout}
+              onClick={onClickLogout}
               Icon={IoLogOutOutline}
               title="Logout"
             />
