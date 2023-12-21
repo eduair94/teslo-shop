@@ -8,4 +8,5 @@
 4. Setup the database ```docker compose up -d```
 5. Run prisma migrations ```npx prisma migrate dev```
 6. Execute ```npm run seed```
+7. Clean LocalStorage from the browser.
 7. Run the project ```npm run dev```
