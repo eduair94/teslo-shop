@@ -9,3 +9,6 @@ export * from './auth/login';
 export * from './auth/logout';
 export * from './auth/register';
 export * from './country/getCountries';
+export * from './order/get-order';
+export * from './order/get-orders-by-user';
+export * from './order/place-order';

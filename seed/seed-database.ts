@@ -3,6 +3,8 @@ import { initialData } from './seed';
 import { countries } from './seed-countries';
 async function main() {
   // Delete previous records
+  await prisma.orderAddress.deleteMany();
+
   await prisma.user.deleteMany();
   await prisma.productImage.deleteMany();
   await prisma.product.deleteMany();

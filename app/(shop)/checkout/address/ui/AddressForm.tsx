@@ -19,6 +19,7 @@ interface FormInputs {
   country: string;
   phone: string;
   rememberAddress: boolean;
+  userId?: string;
 }
 
 interface Props {
@@ -30,6 +31,7 @@ export const AddressForm: FC<Props> = ({
   countries,
   userStoredAddress = {},
 }) => {
+  const rememberAddressDefault = !!userStoredAddress?.address;
   const {
     handleSubmit,
     register,
@@ -38,7 +40,7 @@ export const AddressForm: FC<Props> = ({
   } = useForm<FormInputs>({
     defaultValues: {
       ...userStoredAddress,
-      rememberAddress: false,
+      rememberAddress: rememberAddressDefault,
     },
   });
   const [loading, setLoading] = useState(true);
@@ -53,7 +55,7 @@ export const AddressForm: FC<Props> = ({
 
   useEffect(() => {
     if (address.firstName) {
-      reset(address);
+      reset({ ...address, rememberAddress: rememberAddressDefault });
     }
     setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,7 +65,26 @@ export const AddressForm: FC<Props> = ({
     try {
       setFormLoading(true);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { rememberAddress, ...address } = data;
+      const {
+        address: addr,
+        address2,
+        city,
+        country,
+        firstName,
+        lastName,
+        phone,
+        postalCode,
+      } = data;
+      const address = {
+        address: addr,
+        address2,
+        city,
+        country,
+        firstName,
+        lastName,
+        phone,
+        postalCode,
+      };
       setAddress(address);
       if (data.rememberAddress) {
         await setUserAddress(address, session!.user.id);
@@ -204,10 +225,13 @@ export const AddressForm: FC<Props> = ({
         <button
           disabled={!isValid || formLoading}
           type="submit"
-          className={clsx('btn-primary flex w-full sm:w-1/2 justify-center', {
-            'btn-primary': isValid,
-            'btn-disabled': !isValid,
-          })}
+          className={clsx(
+            'btn-primary flex w-full sm:w-1/2 justify-center  items-center',
+            {
+              'btn-primary': isValid,
+              'btn-disabled': !isValid,
+            },
+          )}
         >
           {formLoading ? (
             <>
