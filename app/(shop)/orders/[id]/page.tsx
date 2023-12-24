@@ -1,5 +1,5 @@
 import { getOrder } from '@/actions';
-import { Title } from '@/components';
+import { PaypalButton, Title } from '@/components';
 import { currencyFormat } from '@/utils';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -36,7 +36,10 @@ const OrderPage = async ({ params }: Props) => {
             <PaymentStatus isPaid={order.isPaid} />
 
             {productsInCart.map((product) => (
-              <div className="flex mb-5" key={product.slug}>
+              <div
+                className="flex mb-5"
+                key={`${product.slug}-${product.size}`}
+              >
                 <Image
                   src={`/products/${product.images[0]}`}
                   width={100}
@@ -97,7 +100,11 @@ const OrderPage = async ({ params }: Props) => {
             </div>
 
             <div className="mt-5 mb-2 w-full">
-              <PaymentStatus isPaid={order.isPaid} />
+              {order.isPaid ? (
+                <PaymentStatus isPaid={order.isPaid} />
+              ) : (
+                <PaypalButton orderId={order.id} amount={total} />
+              )}
             </div>
           </div>
         </div>
