@@ -10,3 +10,5 @@
 6. Execute ```npm run seed```
 7. Clean LocalStorage from the browser.
 7. Run the project ```npm run dev```
+
+# Deploy
