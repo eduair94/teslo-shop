@@ -295,6 +295,7 @@ export const ProductForm: FC<Props> = ({ product, categories }) => {
           <div className="flex flex-wrap">
             {sizes.map((size) => (
               <button
+                type="button"
                 key={size}
                 onClick={() => onSizeChange(size)}
                 className={clsx(
