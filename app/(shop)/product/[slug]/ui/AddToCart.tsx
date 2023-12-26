@@ -2,7 +2,10 @@
 import { QuantitySelector, SizeSelector } from '@/components';
 import { CartProduct, IProduct, ISize } from '@/interfaces';
 import { useCartStore } from '@/store';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { FC, useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface Props {
   product: IProduct;
@@ -10,6 +13,7 @@ interface Props {
 
 export const AddToCart: FC<Props> = ({ product }) => {
   const addProductToCart = useCartStore((state) => state.addProductToCart);
+  const { data: session } = useSession();
   const [size, setSize] = useState<ISize | undefined>();
   const [quantity, setQuantity] = useState<number>(1);
   const [posted, setPosted] = useState(false);
@@ -30,6 +34,19 @@ export const AddToCart: FC<Props> = ({ product }) => {
     setPosted(false);
     setQuantity(1);
     setSize(undefined);
+    toast.success(
+      `${cartProduct.quantity} ${cartProduct.title} - ${cartProduct.size} added to your cart`,
+      {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      },
+    );
   };
 
   return (
@@ -45,9 +62,16 @@ export const AddToCart: FC<Props> = ({ product }) => {
 
       <QuantitySelector quantity={quantity} onQuantityChanged={setQuantity} />
 
-      <button onClick={addToCart} className="btn-primary my-5">
-        Add to Cart
-      </button>
+      <div className="my-5 flex gap-3">
+        <button onClick={addToCart} className="btn-primary">
+          Add to Cart
+        </button>
+        {session?.user.role === 'admin' && (
+          <Link href={`/admin/product/${product.slug}`} className="btn-primary">
+            Edit product
+          </Link>
+        )}
+      </div>
     </>
   );
 };

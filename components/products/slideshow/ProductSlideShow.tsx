@@ -11,7 +11,7 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 
-import Image from 'next/image';
+import { ProductImage } from '@/components';
 import './slideshow.css';
 
 interface Props {
@@ -22,6 +22,7 @@ interface Props {
 
 export const ProductSlideShow: FC<Props> = ({ images, title, className }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperObject>();
+  if (!images.length) images = [''];
 
   return (
     <div id="product-slideshow" className={className}>
@@ -44,10 +45,10 @@ export const ProductSlideShow: FC<Props> = ({ images, title, className }) => {
       >
         {images.map((image) => (
           <SwiperSlide key={image}>
-            <Image
+            <ProductImage
               width={1024}
               height={800}
-              src={`/products/${image}`}
+              src={image}
               alt={title}
               className="rounded-lg object-fill"
             />
@@ -65,10 +66,10 @@ export const ProductSlideShow: FC<Props> = ({ images, title, className }) => {
       >
         {images.map((image) => (
           <SwiperSlide key={image}>
-            <Image
+            <ProductImage
               width={300}
               height={300}
-              src={`/products/${image}`}
+              src={image}
               alt={title}
               className="rounded-lg object-fill"
             />

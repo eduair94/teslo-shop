@@ -1,6 +1,6 @@
 'use client';
+import { ProductImage } from '@/components';
 import { IProduct } from '@/interfaces';
-import Image from 'next/image';
 import Link from 'next/link';
 import { FC, useState } from 'react';
 
@@ -13,8 +13,8 @@ export const ProductGridItem: FC<Props> = ({ product }) => {
 
   return (
     <div className="rounded-md overflow-hidden fade-in">
-      <Image
-        src={`/products/${displayImage}`}
+      <ProductImage
+        src={displayImage}
         alt={product.title}
         className="w-full object-cover rounded"
         width={500}

@@ -1,4 +1,5 @@
 import bcryptjs from 'bcryptjs';
+import { AvatarGenerator } from 'random-avatar-generator';
 interface SeedProduct {
   description: string;
   images: string[];
@@ -25,6 +26,7 @@ interface SeedUser {
   password: string;
   name: string;
   role: 'admin' | 'user';
+  image: string;
 }
 
 interface SeedData {
@@ -33,25 +35,23 @@ interface SeedData {
   products: SeedProduct[];
 }
 
+const generator = new AvatarGenerator();
+
 export const initialData: SeedData = {
   users: [
     {
-      email: 'fernando@gmail.com',
-      name: 'Fernando Herrera',
-      password: bcryptjs.hashSync('123456'),
-      role: 'user',
-    },
-    {
-      email: 'fernando2@gmail.com',
-      name: 'Fernando Herrera',
-      password: bcryptjs.hashSync('fernando2@gmail.com'),
-      role: 'user',
-    },
-    {
-      email: 'eduardo@gmail.com',
-      name: 'Fernando Herrera',
+      email: 'test.admin@mail.com',
+      name: 'Test Admin',
       password: bcryptjs.hashSync('123456'),
       role: 'admin',
+      image: generator.generateRandomAvatar(),
+    },
+    {
+      email: 'test.user@mail.com',
+      name: 'Test User',
+      password: bcryptjs.hashSync('123456'),
+      role: 'user',
+      image: generator.generateRandomAvatar(),
     },
   ],
   categories: ['Shirts', 'Pants', 'Hoodies', 'Hats'],

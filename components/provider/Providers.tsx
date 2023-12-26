@@ -2,6 +2,9 @@
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { SessionProvider } from 'next-auth/react';
 import { FC, ReactNode } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { GlobalLoading } from '..';
 
 interface Props {
   children: ReactNode;
@@ -9,14 +12,18 @@ interface Props {
 
 export const Providers: FC<Props> = ({ children }) => {
   return (
-    <PayPalScriptProvider
-      options={{
-        clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? '',
-        intent: 'capture',
-        currency: 'USD',
-      }}
-    >
-      <SessionProvider>{children}</SessionProvider>
-    </PayPalScriptProvider>
+    <>
+      <PayPalScriptProvider
+        options={{
+          clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? '',
+          intent: 'capture',
+          currency: 'USD',
+        }}
+      >
+        <SessionProvider>{children}</SessionProvider>
+        <ToastContainer />
+      </PayPalScriptProvider>
+      <GlobalLoading />
+    </>
   );
 };

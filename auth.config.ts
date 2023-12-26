@@ -21,7 +21,12 @@ export const authConfig: NextAuthConfig = {
       // }
       return true;
     },
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
+      if (trigger === 'update' && session?.image) {
+        // Note, that `session` can be any arbitrary object, remember to validate it!
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (token.data as any).image = session.image;
+      }
       if (user) token.data = user;
       return token;
     },
@@ -60,4 +65,10 @@ export const authConfig: NextAuthConfig = {
   ],
 };
 
-export const { signIn, signOut, auth, handlers } = NextAuth(authConfig);
+export const {
+  signIn,
+  signOut,
+  auth,
+  handlers,
+  update: updateUser,
+} = NextAuth(authConfig);

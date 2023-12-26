@@ -72,3 +72,8 @@ body {
     @apply flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all;
   }
 }
+
+.btn-danger {
+  @apply bg-red-500 hover:bg-blue-700 text-white py-2 px-4 transition-all;
+}
+

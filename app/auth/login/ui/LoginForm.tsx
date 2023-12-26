@@ -1,25 +1,32 @@
 'use client';
 
 import { authenticate } from '@/actions';
+import { initialData } from '@/seed/seed';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { IoAlertCircleOutline } from 'react-icons/io5';
 
-function LoginButton() {
+interface Props {
+  text: string;
+  onClick?: () => void;
+}
+
+function LoginButton({ text, onClick }: Props) {
   const { pending } = useFormStatus();
 
   return (
     <button
+      onClick={onClick}
       type="submit"
-      className={clsx('', {
+      className={clsx('mb-3', {
         'btn-disabled': pending,
         'btn-primary': !pending,
       })}
     >
-      Login
+      {text}
     </button>
   );
 }
@@ -27,16 +34,30 @@ function LoginButton() {
 export const LoginForm = () => {
   const [state, dispatch] = useFormState(authenticate, undefined);
   const router = useRouter();
+  const query = useSearchParams();
+  const email = useRef<HTMLInputElement>(null);
+  const password = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    // Get query parameter returnTo
+    const returnTo = query.get('returnTo');
     if (state === 'Success') {
-      router.push('/');
+      router.push(returnTo ?? '/');
     }
-  }, [state, router]);
+  }, [query, state, router]);
+
+  const setLoginCredentials = (role: 'user' | 'admin') => {
+    const user = initialData.users.find((user) => user.role === role);
+    if (!user) return;
+    if (email.current) email.current.value = user.email;
+    if (password.current) password.current.value = '123456';
+  };
+
   return (
     <form action={dispatch} className="flex flex-col">
       <label htmlFor="email">Email</label>
       <input
+        ref={email}
         className="px-5 py-2 border bg-gray-200 rounded mb-5"
         type="email"
         name="email"
@@ -44,12 +65,21 @@ export const LoginForm = () => {
 
       <label htmlFor="password">Password</label>
       <input
+        ref={password}
         className="px-5 py-2 border bg-gray-200 rounded mb-5"
         type="password"
         name="password"
       />
 
-      <LoginButton />
+      <LoginButton text="Login" />
+      <LoginButton
+        onClick={() => setLoginCredentials('user')}
+        text="Login test user"
+      />
+      <LoginButton
+        onClick={() => setLoginCredentials('admin')}
+        text="Login test admin"
+      />
 
       <div
         className="flex h-8 items-end space-x-1"

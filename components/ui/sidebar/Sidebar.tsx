@@ -4,7 +4,7 @@ import { useUIStore } from '@/store';
 import clsx from 'clsx';
 import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   IoCloseOutline,
   IoLogInOutline,
@@ -20,17 +20,16 @@ import { SideBarLink } from './SideBarLink';
 export const Sidebar = () => {
   const isSideMenuOpen = useUIStore((state) => state.isSideMenuOpen);
   const closeMenu = useUIStore((state) => state.closeSideMenu);
-  const [loading, setLoading] = useState(true);
+  const setLoadingGlobal = useUIStore((state) => state.setLoading);
   const router = useRouter();
 
   const { data: session, status } = useSession();
   const isAuthenticated = status === 'authenticated';
+  const isLoading = status === 'loading';
   const isAdmin = session?.user.role === 'admin';
 
   const sessionUpdate = async () => {
-    setLoading(true);
     await getSession();
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -38,14 +37,14 @@ export const Sidebar = () => {
   }, []);
 
   const onClickLogout = () => {
+    setLoadingGlobal(true);
     logout().then(() => {
       sessionUpdate().then(() => {
         router.refresh();
+        setLoadingGlobal(false);
       });
     });
   };
-
-  if (loading) return <></>;
 
   return (
     <>
@@ -53,7 +52,10 @@ export const Sidebar = () => {
       {isSideMenuOpen && (
         <>
           <div className="fixed top-0 left-0 w-screen h-screen z-10 bg-black opacity-30"></div>
-          <div className="fade-in fixed top-0 left-0 w-screen h-screen z-10 backdrop-filter backdrop-blur-sm"></div>
+          <div
+            onClick={closeMenu}
+            className="fade-in fixed top-0 left-0 w-screen h-screen z-10 backdrop-filter backdrop-blur-sm"
+          ></div>
         </>
       )}
 
@@ -93,15 +95,33 @@ export const Sidebar = () => {
             />
           </>
         ) : (
-          <SideBarLink Icon={IoLogInOutline} title="Login" href="/auth/login" />
+          !isLoading && (
+            <SideBarLink
+              Icon={IoLogInOutline}
+              title="Login"
+              href="/auth/login"
+            />
+          )
         )}
 
         {isAdmin && (
           <>
             <div className="w-full h-px bg-gray-200 my-10"></div>
-            <SideBarLink Icon={IoShirtOutline} title="Products" href="/" />
-            <SideBarLink Icon={IoTicketOutline} title="Orders" href="/orders" />
-            <SideBarLink Icon={IoPeopleOutline} title="Users" href="/users" />
+            <SideBarLink
+              Icon={IoShirtOutline}
+              title="Products"
+              href="/admin/products"
+            />
+            <SideBarLink
+              Icon={IoTicketOutline}
+              title="Orders"
+              href="/admin/orders"
+            />
+            <SideBarLink
+              Icon={IoPeopleOutline}
+              title="Users"
+              href="/admin/users"
+            />
           </>
         )}
       </nav>

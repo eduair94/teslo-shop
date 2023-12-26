@@ -1,5 +1,6 @@
 'use client';
 import { paypalCheckPayment, setTransactionId } from '@/actions';
+import { roundAmount } from '@/utils';
 import {
   CreateOrderActions,
   CreateOrderData,
@@ -17,7 +18,7 @@ interface Props {
 export const PaypalButton: FC<Props> = ({ orderId, amount }) => {
   const [{ isPending }] = usePayPalScriptReducer();
 
-  const roundedAmount = useMemo(() => Math.round(amount * 100) / 100, [amount]);
+  const roundedAmount = useMemo(() => roundAmount(amount), [amount]);
 
   const createOrder = async (
     data: CreateOrderData,
@@ -58,5 +59,9 @@ export const PaypalButton: FC<Props> = ({ orderId, amount }) => {
       </div>
     );
   }
-  return <PayPalButtons createOrder={createOrder} onApprove={onApprove} />;
+  return (
+    <div className="relative z-0">
+      <PayPalButtons createOrder={createOrder} onApprove={onApprove} />
+    </div>
+  );
 };

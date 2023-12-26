@@ -1,7 +1,6 @@
 import { getOrder } from '@/actions';
-import { PaypalButton, Title } from '@/components';
+import { PaypalButton, ProductImage, Title } from '@/components';
 import { currencyFormat } from '@/utils';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { PaymentStatus } from './ui/PaymentStatus';
 
@@ -28,7 +27,7 @@ const OrderPage = async ({ params }: Props) => {
   const itemsInOrder = order.itemsInOrder;
   const { subTotal, tax, total } = order;
   return (
-    <div className="flex justify-center items-center mb-72 px-10 sm:px-0">
+    <div className="flex justify-center items-center mb-10 md:mb-72 px-10 sm:px-0">
       <div className="flex flex-col w-[1000px]">
         <Title title={`Order number #${order.id.split('-').at(-1)}`} />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
@@ -40,8 +39,8 @@ const OrderPage = async ({ params }: Props) => {
                 className="flex mb-5"
                 key={`${product.slug}-${product.size}`}
               >
-                <Image
-                  src={`/products/${product.images[0]}`}
+                <ProductImage
+                  src={product.images[0]}
                   width={100}
                   height={100}
                   alt={product.title}

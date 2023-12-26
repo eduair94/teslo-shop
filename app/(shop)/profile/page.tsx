@@ -1,18 +1,25 @@
+'use server';
+import { updateUserImage } from '@/actions';
 import { auth } from '@/auth.config';
 import { Title } from '@/components';
-import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import {
   IoMailOutline,
   IoMailUnreadOutline,
   IoPersonOutline,
 } from 'react-icons/io5';
+import { ProfileImage } from './ui/ProfileImage';
 
 export default async function ProfilePage() {
   const session = await auth();
   if (!session?.user) {
     redirect('/auth/login?returnTo=/profile');
   }
+
+  if (!session.user.image) {
+    await updateUserImage(session.user.id);
+  }
+
   return (
     <div>
       <Title title="Profile" />
@@ -23,11 +30,10 @@ export default async function ProfilePage() {
         >
           <div className="p-4 md:p-12 text-center lg:text-left">
             <div className="block lg:hidden rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-cover bg-center overflow-hidden">
-              <Image
-                src={session.user.image || '/imgs/default-avatar.jpg'}
-                alt="Profile image"
+              <ProfileImage
                 width={192}
                 height={192}
+                image={session.user.image}
               />
             </div>
 
@@ -54,13 +60,11 @@ export default async function ProfilePage() {
           </div>
         </div>
         <div className="hidden lg:block w-full lg:w-2/5 h-[500px]">
-          <Image
+          <ProfileImage
             className="rounded-none lg:rounded-lg shadow-2xl object-cover h-full"
-            src={session.user.image || '/imgs/default-avatar.jpg'}
-            alt="Profile image"
-            objectFit="cover"
             width={500}
-            height={2000}
+            height={500}
+            image={session.user.image}
           />
         </div>
       </div>

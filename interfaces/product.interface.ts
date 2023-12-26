@@ -10,6 +10,7 @@ export interface IProduct {
   title: string;
   //type: IType;
   gender: IGender;
+  categoryId?: string;
 }
 
 export interface CartProduct {
@@ -20,6 +21,11 @@ export interface CartProduct {
   quantity: number;
   size: ISize;
   image: string;
+}
+
+export interface ProductImage {
+  id: number;
+  url: string;
 }
 
 export type IGender = 'men' | 'women' | 'kid' | 'unisex';

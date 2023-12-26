@@ -2,6 +2,7 @@
 
 import { PaypalOrderStatusResponse } from '@/interfaces';
 import prisma from '@/lib/prisma';
+import { roundAmount } from '@/utils';
 import { revalidatePath } from 'next/cache';
 
 const getPayPalBearerToken = async (): Promise<string | null> => {
@@ -87,8 +88,19 @@ export const paypalCheckPayment = async (paypalTransactionId: string) => {
   }
 
   const orderId = purchase_units[0].invoice_id;
+  const transactionAmount = parseFloat(purchase_units[0].amount.value);
 
   try {
+    const order = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+      },
+    });
+    if (!order) throw new Error('Order not found');
+    const orderAmount = roundAmount(order.total);
+    if (transactionAmount !== orderAmount)
+      throw new Error('Amounts do not match');
+
     await prisma.order.update({
       where: {
         id: orderId,

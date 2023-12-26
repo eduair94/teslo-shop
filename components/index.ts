@@ -15,4 +15,8 @@ export * from './ui/title/Title';
 export * from './ui/top-menu/TopMenu';
 
 export * from './paypal/PaypalButton';
+export * from './product/product-image/ProductImage';
 export * from './provider/Providers';
+export * from './ui/button/Button';
+export * from './ui/global-loading/GlobalLoading';
+export * from './ui/spinner/Spinner';
