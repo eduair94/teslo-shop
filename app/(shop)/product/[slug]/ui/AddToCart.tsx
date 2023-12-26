@@ -37,7 +37,7 @@ export const AddToCart: FC<Props> = ({ product }) => {
     toast.success(
       `${cartProduct.quantity} ${cartProduct.title} - ${cartProduct.size} added to your cart`,
       {
-        position: 'top-right',
+        position: 'bottom-right',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,

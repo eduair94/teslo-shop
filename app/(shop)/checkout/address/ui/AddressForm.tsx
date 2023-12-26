@@ -4,6 +4,7 @@ import { deleteUserAddress, setUserAddress } from '@/actions';
 import { Spinner } from '@/components';
 import { IAddress, ICountry } from '@/interfaces';
 import { useAddressStore } from '@/store';
+import { faker } from '@faker-js/faker';
 import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -36,6 +37,7 @@ export const AddressForm: FC<Props> = ({
   const {
     handleSubmit,
     register,
+    setValue,
     reset,
     formState: { isValid },
   } = useForm<FormInputs>({
@@ -61,6 +63,24 @@ export const AddressForm: FC<Props> = ({
     setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const generateRandomFields = () => {
+    const data = {
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      address: faker.location.streetAddress(),
+      address2: faker.datatype.boolean()
+        ? faker.location.secondaryAddress()
+        : '',
+      postalCode: faker.location.zipCode(),
+      city: faker.location.city(),
+      country: faker.helpers.arrayElement(countries.map((el) => el.id)),
+      phone: faker.phone.number(),
+    };
+    Object.entries(data).forEach(([key, value]) => {
+      setValue(key as keyof FormInputs, value, { shouldValidate: true });
+    });
+  };
 
   const onSubmit = async (data: FormInputs) => {
     try {
@@ -222,12 +242,12 @@ export const AddressForm: FC<Props> = ({
         </div>
       </div>
 
-      <div className="flex flex-col mb-2 sm:mt-10">
+      <div className="flex flex-wrap mb-2 sm:mt-10 w-full gap-3">
         <button
           disabled={!isValid || formLoading}
           type="submit"
           className={clsx(
-            'btn-primary flex w-full sm:w-1/2 justify-center  items-center',
+            'btn-primary flex w-full justify-center items-center sm:flex-1',
             {
               'btn-primary': isValid,
               'btn-disabled': !isValid,
@@ -242,6 +262,13 @@ export const AddressForm: FC<Props> = ({
           ) : (
             <>Next</>
           )}
+        </button>
+        <button
+          type="button"
+          className="btn-primary sm:flex-1 w-full"
+          onClick={() => generateRandomFields()}
+        >
+          Fill with random data
         </button>
       </div>
     </form>

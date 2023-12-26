@@ -2,6 +2,7 @@
 import { ProductImage, QuantitySelector } from '@/components';
 import { useCartStore } from '@/store';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export const ProductsInCart = () => {
@@ -16,7 +17,10 @@ export const ProductsInCart = () => {
 
   useEffect(() => {
     setLoaded(true);
-  }, []);
+    if (!productsInCart.length) {
+      redirect('/empty');
+    }
+  }, [productsInCart.length]);
 
   if (!loaded) {
     return <p>Loading...</p>;
