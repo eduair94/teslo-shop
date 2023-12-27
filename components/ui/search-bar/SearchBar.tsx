@@ -20,7 +20,7 @@ export const SearchBar: FC<Params> = ({ keep = false }) => {
   const closeSideMenu = useUIStore((state) => state.closeSideMenu);
   const { register, handleSubmit, reset } = useForm<FormInputs>({
     defaultValues: {
-      search: searchParams.q ?? '',
+      search: searchParams.get('q') ?? '',
     },
   });
 
