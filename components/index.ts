@@ -19,4 +19,5 @@ export * from './product/product-image/ProductImage';
 export * from './provider/Providers';
 export * from './ui/button/Button';
 export * from './ui/global-loading/GlobalLoading';
+export * from './ui/search-bar/SearchBar';
 export * from './ui/spinner/Spinner';

@@ -9,11 +9,13 @@ import { ProductListItem } from './ui/ProductListItem';
 interface Props {
   searchParams: {
     page: string;
+    q?: string;
   };
 }
 
 export default async function ProductsPage({ searchParams }: Props) {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const q = searchParams.q;
   const { products, totalPages } = await getPaginatedProductsWithImages({
     page,
   });
@@ -71,7 +73,11 @@ export default async function ProductsPage({ searchParams }: Props) {
           </thead>
           <tbody>
             {products.map((product) => (
-              <ProductListItem key={product.id} product={product} />
+              <ProductListItem
+                key={product.id}
+                product={product}
+                q={q as string}
+              />
             ))}
           </tbody>
         </table>

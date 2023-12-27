@@ -1,6 +1,7 @@
 'use client';
 import { updateUserImage } from '@/actions';
 import { Spinner } from '@/components';
+import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { FC, useCallback, useEffect, useState } from 'react';
@@ -46,14 +47,16 @@ export const ProfileImage: FC<Props> = ({
   return (
     <div className="relative h-full">
       <Image
-        className={className}
+        className={clsx(className, {
+          'filter blur-sm fade-in': loading,
+        })}
         src={session?.user.image || image || '/imgs/default-avatar.jpg'}
         alt="Profile image"
         width={width}
         height={height}
       />
       {loading && (
-        <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center fade-in z-2 backdrop-filter backdrop-blur-sm">
+        <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center z-2">
           <Spinner size="40px" />
         </div>
       )}

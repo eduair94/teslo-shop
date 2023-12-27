@@ -1,9 +1,9 @@
 import { titleFont } from '@/config/fonts';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 interface Props {
   title: string;
-  subtitle?: string;
+  subtitle?: string | ReactNode;
   className?: string;
 }
 

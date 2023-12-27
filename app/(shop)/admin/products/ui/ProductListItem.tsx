@@ -23,9 +23,34 @@ interface IProduct {
 
 interface Props {
   product: IProduct;
+  q?: string;
 }
 
-export const ProductListItem: FC<Props> = ({ product }) => {
+const HighlightedText = ({
+  text,
+  highlight,
+}: {
+  text: string;
+  highlight: string;
+}) => {
+  const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+  console.log('parts', parts);
+  return (
+    <span>
+      {parts.map((part, i) =>
+        part.toLowerCase() === highlight.toLowerCase() ? (
+          <span key={i} style={{ backgroundColor: 'yellow' }}>
+            {part}
+          </span>
+        ) : (
+          part
+        ),
+      )}
+    </span>
+  );
+};
+
+export const ProductListItem: FC<Props> = ({ product, q }) => {
   return (
     <tr className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -44,7 +69,11 @@ export const ProductListItem: FC<Props> = ({ product }) => {
           href={`/admin/product/${product.slug}`}
           className="hover:underline"
         >
-          {product.title}
+          {q ? (
+            <HighlightedText text={product.title} highlight={q} />
+          ) : (
+            product.title
+          )}
         </Link>
       </td>
       <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">

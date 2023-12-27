@@ -55,9 +55,14 @@ body {
   animation-name: fadeIn;
 }
 
-.btn-primary {
-  @apply bg-blue-600 hover:bg-blue-800 text-white py-2 px-4 rounded transition-all;
+.btn-primary-tile {
+  @apply bg-blue-600 hover:bg-blue-800 text-white py-2 px-4 transition-all;
 }
+
+.btn-primary {
+  @apply btn-primary-tile rounded;
+}
+
 
 .btn-secondary {
   @apply bg-gray-200 hover:bg-gray-300 text-black py-2 px-4 rounded transition-all;
@@ -70,6 +75,9 @@ body {
 @layer components {
   .nav-link {
     @apply flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all;
+  }
+  .nav-link-menu .nav-link {
+    @apply mt-5
   }
 }
 
