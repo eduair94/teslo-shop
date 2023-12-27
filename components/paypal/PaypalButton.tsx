@@ -17,8 +17,8 @@ interface Props {
 }
 
 const testUser = {
-  email: process.env.NEXT_PUBLIC_PAYPAL_TEST_EMAIL,
-  password: process.env.NEXT_PUBLIC_PAYPAL_TEST_PASSWORD,
+  email: process.env.NEXT_PUBLIC_PAYPAL_TEST_EMAIL || '',
+  password: process.env.NEXT_PUBLIC_PAYPAL_TEST_PASSWORD || '',
 };
 
 export const PaypalButton: FC<Props> = ({ orderId, amount }) => {
