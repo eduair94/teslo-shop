@@ -37,7 +37,8 @@ export default {
 
           if (!user) return null;
 
-          if (!bcryptjs.compareSync(password, user.password)) return null;
+          if (!bcryptjs.compareSync(password, user.password as string))
+            return null;
 
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { password: _, ...rest } = user;
