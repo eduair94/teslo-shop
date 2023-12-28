@@ -72,10 +72,15 @@ export const NewAccountForm = () => {
             'border-red-500': errors.password,
           })}
           type="password"
-          {...register('password', { required: true })}
+          {...register('password', { required: true, minLength: 6 })}
         />
         {errors?.password?.type === 'required' && (
           <span className="text-red-500 pb-2">Password is required</span>
+        )}
+        {errors?.password?.type === 'minLength' && (
+          <span className="text-red-500 pb-2">
+            Password must contain at least 6 characters
+          </span>
         )}
       </div>
 

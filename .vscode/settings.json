@@ -6,7 +6,8 @@
         "Flickr",
         "imgs",
         "Signin",
-        "Teslo"
+        "Teslo",
+        "uuidv"
     ],
     "editor.formatOnSave": true
 }

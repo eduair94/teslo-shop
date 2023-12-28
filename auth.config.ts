@@ -1,26 +1,17 @@
-import bcryptjs from 'bcryptjs';
+import { PrismaAdapter } from '@auth/prisma-adapter';
 import type { NextAuthConfig } from 'next-auth';
 import NextAuth from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
-import { z } from 'zod';
+import AuthProviders from './auth.providers';
 import prisma from './lib/prisma';
+
 export const authConfig: NextAuthConfig = {
+  ...AuthProviders,
+  adapter: PrismaAdapter(prisma),
   pages: {
     signIn: '/auth/login',
     newUser: '/auth/new-account',
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      // const isLoggedIn = !!auth?.user;
-      // const isProfilePage = nextUrl.pathname.startsWith('/profile');
-      // if (isProfilePage) {
-      //   if (isLoggedIn) return true;
-      //   return .redirect(
-      //     new URL('/auth/login?returnTo=/profile', nextUrl),
-      //   ); // Redirect unauthenticated users to login page
-      // }
-      return true;
-    },
     jwt({ token, user, trigger, session }) {
       if (trigger === 'update' && session?.image) {
         // Note, that `session` can be any arbitrary object, remember to validate it!
@@ -30,39 +21,12 @@ export const authConfig: NextAuthConfig = {
       if (user) token.data = user;
       return token;
     },
-    session({ session, token, user }) {
+    session({ session, token }) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       session.user = token.data as any;
       return session;
     },
   },
-  providers: [
-    Credentials({
-      async authorize(credentials) {
-        const parsedCredentials = z
-          .object({ email: z.string().email(), password: z.string().min(6) })
-          .safeParse(credentials);
-
-        if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
-
-          const user = await prisma.user.findUnique({
-            where: { email: email.toLowerCase() },
-          });
-
-          if (!user) return null;
-
-          if (!bcryptjs.compareSync(password, user.password)) return null;
-
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { password: _, ...rest } = user;
-
-          return rest;
-        }
-
-        return null;
-      },
-    }),
-  ],
 };
 
 export const {

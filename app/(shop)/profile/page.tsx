@@ -8,6 +8,7 @@ import {
   IoMailUnreadOutline,
   IoPersonOutline,
 } from 'react-icons/io5';
+import { ChangePassword } from './ui/ChangePassword';
 import { ProfileImage } from './ui/ProfileImage';
 
 export default async function ProfilePage() {
@@ -43,7 +44,7 @@ export default async function ProfilePage() {
             <div className="mx-auto lg:mx-0 w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
             <p className="pt-4 text-base font-bold flex items-center justify-center lg:justify-start gap-2">
               <IoPersonOutline size={15} />
-              <span className="capitalize">{session.user.role}</span>
+              <span className="capitalize">{session.user.role ?? 'user'}</span>
             </p>
             <p className="pt-4 text-base font-bold flex items-center justify-center lg:justify-start gap-2">
               <IoMailOutline size={15} />
@@ -57,6 +58,9 @@ export default async function ProfilePage() {
                   : 'Email not verified'}
               </span>
             </p>
+            <div className="pt-4 text-base font-bold flex items-center justify-center lg:justify-start gap-2">
+              <ChangePassword />
+            </div>
           </div>
         </div>
         <div className="hidden lg:block w-full lg:w-2/5 h-[500px]">
