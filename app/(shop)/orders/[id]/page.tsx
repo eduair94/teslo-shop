@@ -1,7 +1,8 @@
 import { getOrder } from '@/actions';
+import { auth } from '@/auth.config';
 import { PaypalButton, ProductImage, Title } from '@/components';
 import { currencyFormat } from '@/utils';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { PaymentStatus } from './ui/PaymentStatus';
 
 interface Props {
@@ -10,6 +11,10 @@ interface Props {
   };
 }
 const OrderPage = async ({ params }: Props) => {
+  const session = await auth();
+  if (!session?.user) {
+    redirect('/orders');
+  }
   const { id } = params;
   const { order } = await getOrder(id);
   if (!order) return notFound();
